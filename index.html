@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0066)file:///Users/jameswatsonuk/Downloads/index-with-sheets%20(1).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Vestiary - Garment preservation, reimagined. Launching 2026.">
     <title>Vestiary - Coming Soon</title>
@@ -28,7 +28,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: url('vestiary-hero.jpg'); /* Replace with your Midjourney image */
+            background-image: url('vestiary-hero.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -216,14 +216,14 @@
             }
             
             .hero {
-                min-height: 100svh; /* Better mobile viewport height */
+                min-height: 100svh;
             }
         }
         
         /* High DPI Displays */
         @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
             .hero {
-                background-image: url('vestiary-hero@2x.jpg'); /* Optional: higher res version */
+                background-image: url('vestiary-hero@2x.jpg');
             }
         }
     </style>
@@ -236,14 +236,7 @@
             <p class="launch-text">Launching 2026</p>
             
             <form class="signup-form" id="emailForm">
-                <input 
-                    type="email" 
-                    class="email-input" 
-                    id="emailInput"
-                    placeholder="Enter your email for launch updates"
-                    required
-                    aria-label="Email address"
-                >
+                <input type="email" class="email-input" id="emailInput" placeholder="Enter your email for launch updates" required="" aria-label="Email address">
                 <button type="submit" class="submit-button">Notify Me</button>
                 <div class="success-message" id="successMessage">
                     Thank you. You'll be among the first to know when we launch.
@@ -257,53 +250,47 @@
     </div>
 
     <script>
-        // Email form handling
+        // Email form handling with Google Sheets integration
         document.getElementById('emailForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const email = document.getElementById('emailInput').value;
             const successMessage = document.getElementById('successMessage');
             
-            // Here you can add integration with email service (Mailchimp, ConvertKit, etc.)
-            // For now, we'll just show success message
-            
             // Simple validation
             if (email && email.includes('@')) {
-                // Store email in localStorage (temporary solution)
-                let emails = JSON.parse(localStorage.getItem('vestiary_emails') || '[]');
-                if (!emails.includes(email)) {
-                    emails.push(email);
-                    localStorage.setItem('vestiary_emails', JSON.stringify(emails));
-                }
+                // Send to Google Sheets
+                sendToGoogleSheets(email);
                 
                 // Show success message
                 successMessage.classList.add('show');
                 document.getElementById('emailInput').value = '';
                 
-                // Hide form after submission (optional)
+                // Fade form after submission
                 setTimeout(() => {
                     document.querySelector('.signup-form').style.opacity = '0.5';
                 }, 500);
-                
-                // Optional: Send to Google Sheets or email service
-                // sendToGoogleSheets(email);
             }
         });
         
-        // Optional: Function to send to Google Sheets (requires setup)
+        // Send email to Google Sheets
         function sendToGoogleSheets(email) {
-            // You can connect this to a Google Apps Script web app
-            // See setup instructions in deployment guide
-            const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwgRJNGPluNyyHIFRkNANg8_cDbDe8VDaULgxFGL9utPJHa80mmGv2D7uix_uxU_mfToQ/exec';
             
             fetch(scriptURL, {
                 method: 'POST',
-                body: JSON.stringify({ email: email, timestamp: new Date().toISOString() }),
-                headers: { 'Content-Type': 'application/json' }
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: email, 
+                    timestamp: new Date().toISOString(),
+                    source: 'coming-soon-page'
+                })
             })
-            .then(response => console.log('Success!', response))
-            .catch(error => console.error('Error!', error));
+            .then(() => console.log('✓ Email saved to Google Sheets'))
+            .catch(error => console.error('Error saving email:', error));
         }
     </script>
-</body>
-</html>
+
+
+</body></html>
